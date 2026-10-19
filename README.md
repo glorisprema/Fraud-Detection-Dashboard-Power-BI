@@ -22,10 +22,10 @@ Fraud Detection Dashboard built in Power BI to monitor high-risk transactions ac
 - Q-Rule flags high-risk online transactions for investigation
 
 ## Dashboard - Executive Summary
-![Executive Summary](<Screenshot 2026-10-19 122423.png>)
+![Executive Summary](Executive-Summary.png)
 
 ## Dashboard - Q-Rule Deep Dive
-![Q-Rule Detail](<Screenshot 2026-10-19 122530.png>)
+![Q-Rule Detail](Q-Rule-Detail.png)
 
 ## How It Works
 Q-Rule flags transactions where risk score is high and channel is online. Helps investigators prioritize cases.
