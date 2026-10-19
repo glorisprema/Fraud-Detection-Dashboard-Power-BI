@@ -10,15 +10,14 @@ Analyzed 26K fraud transactions ($15M total) across Hamilton, Toronto, Oakville.
 
 ## Q-Rule Definition
 **IF Channel = Online AND Amount >= $2,500 THEN Flag High Risk**
-- Exposure: $4.72M
 - Risk ≠ Fraud - Flag means "Needs extra OTP verification"
 - Highest risk: Hamilton Downtown | Online 40.1%
 
 ## Dashboard - Executive Summary
-KPIs, Fraud by Branch, Fraud by Channel
+![Executive Summary](<Screenshot 2026-10-19 122423.png>)
 
 ## Dashboard - Q-Rule Deep Dive
-Customer_ID, Branch, Amount, Channel - All Online >$2500
+![Q-Rule Detail](<Screenshot 2026-10-19 122530.png>)
 
 ## Tools
 Power BI, DAX, Data Modeling
