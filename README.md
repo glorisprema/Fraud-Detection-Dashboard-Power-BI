@@ -14,10 +14,10 @@ Analyzed 26K fraud transactions ($15M total) across Hamilton, Toronto, Oakville.
 - Highest risk: Hamilton Downtown | Online 40.1%
 
 ## Dashboard - Executive Summary
-![Executive Summary](<Screenshot 2026-10-19 122423.png>)
+![Executive Summary](Executive-Summary.png)
 
 ## Dashboard - Q-Rule Deep Dive
-![Q-Rule Detail](<Screenshot 2026-10-19 122530.png>)
+![Q-Rule Detail](Q-Rule-Detail.png)
 
 ## Tools
 Power BI, DAX, Data Modeling
