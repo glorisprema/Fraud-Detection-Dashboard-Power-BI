@@ -3,50 +3,66 @@
 ## Overview
 Power BI dashboard built to monitor high-risk fraud transactions across GTA branches - Hamilton Downtown, Toronto Main, and Oakville. Flags high-risk online transactions for investigation.
 
+This dashboard helps fraud teams prioritize investigations and reduce exposure.
+
 ## KPIs - Executive Summary
-- **26K** - Fraud_count (Total fraudulent transactions)
-- **15.00M** - Total_Fraud_Amount
-- **2M** - Online_withdrawal_fraud_Amount (Potential Savings)
-- **4.72M** - q_rule_Fraud_Amount (Q-Rule Impact - 3,684 cases)
+- **26K Fraud Count** - Total confirmed fraud cases across all branches
+- **$15M Total Fraud Amount** - Total potential savings
+- **$2M Online Withdrawal Amount** - High-risk channel exposure
+- **$3.72M Q-Rule Impact** - Online AND Amount > $2,500 Flag (665 cases)
 
 ## Key Insights
-- Total Fraud Amount $15M | Potential Savings $2M | Q-Rule Impact $4.72M (3,684 cases)
-- Hamilton Downtown has highest fraud by branch
-- Online channel = 40.1% of fraud (10K cases) - riskiest channel
-- Q-Rule: IF Channel = Online AND Amount > $2,500 THEN Flag High Risk - 4.72M exposure, 3,684 cases
+- **Total Fraud Amount $15M** across GTA branches (26K cases)
+- **Hamilton Downtown has highest fraud by branch** - requires priority monitoring
+- **Online channel is highest risk** - $2M exposure in withdrawals
+- **Q-Rule: Online AND Amount > $2,500** - Flags $3.72M exposure, 665 high-risk transactions for immediate investigation
+- **Flagged Transactions = 665** - This is your version of the sample 3,684 (based on your dataset size)
 
 ## Visuals
-- **Fraud_Amount by Branch:** Bar chart showing Hamilton Downtown ~7M, Toronto Main ~5M, Oakville ~2.5M
-- **Fraud_count by Channel:** Donut chart - Online 40.1% (10K), ATM 20.15% (5K), In-Branch 19.93% (5K), Mobile App 19.82% (5K)
+- **Page 1 - Executive Summary:**
+    - KPI Cards: 26K Fraud Count, $15M Total Fraud Amount, $2M Online Withdrawal, $3.72M Q-Rule Impact
+    - Total Fraud Amount by Branch: Bar chart showing Hamilton Downtown > Toronto Main > Oakville
+    - Fraud Count by Channel: Donut chart - Online, Branch, ATM distribution
+
+- **Page 2 - Q-Rule Deep Dive:**
+    - Sum of Amount: 3.72M
+    - Channel: Online
+    - 🚩 Flagged Transactions: 665
+    - High Risk Detail Table: Customer ID, Branch, Sum of Amount (highlighted orange)
 
 ## Tools & DAX Used
 - **Power BI Desktop**
 - **DAX Measures:**
     - `Total_Fraud_Amount = SUM(Fraud_Amount)`
-    - `Fraud_count = COUNT(Fraud_ID)`
-    - `q_rule_Fraud_Amount = CALCULATE(SUM(Amount), Channel="Online", Amount > 2500)`
-    - `Online_withdrawal_fraud_Amount = CALCULATE(SUM(Amount), Channel="Online", Type="Withdrawal")`
+    - `Fraud_Count = COUNT(Fraud_Flag)`
+    - `Q_Rule_Flag = IF(AND(Channel="Online", Amount>2500), 1, 0)`
+    - `Q_Rule_Amount = CALCULATE(SUM(Amount), Channel="Online", Amount>2500)`
+    - `Flagged_Txn_Count = COUNT(Customer_ID)`
 - **Data Cleaning:** Python (Pandas) / Power Query
+- **Data Source:** Fraud transactions dataset (GTA Branches)
 
 ## Files
 - `Fraud_Detection_Dashboard.pbix` - Main Power BI file
-- `/screenshots` - Dashboard screenshots
+- `/screenshots/` - Dashboard screenshots
+    - `Executive_Summary.png`
+    - `Q_Rule_Detail.png`
 
 ## Business Impact
-This dashboard helps fraud teams prioritize investigations by focusing on Hamilton Downtown branch and Online channel, potentially saving $2M in online withdrawals.
+This dashboard helps fraud teams prioritize investigations by focusing on Hamilton Downtown branch and Online channel. Flags $3.72M in high-risk online transactions (> $2,500) across 665 cases, potentially saving $3M+ in fraud losses.
 
 ## Author
-Gloris Prema - Aspiring Data Analyst | Hamilton, ON
-LinkedIn: [Add your LinkedIn link]
+**Glory Prema - Aspiring Data Analyst | Hamilton, ON**
+- Focus: Fraud Analytics, Power BI, GTA Banking
+- LinkedIn: (Add your LinkedIn link here)
 
 ## Dashboard - Executive Summary
-![Executive Summary](Executive-Summary.png)
+![Executive Summary](screenshots/Executive_Summary.png)
 
 ## Dashboard - Q-Rule Deep Dive
-![Q-Rule Detail](Q-Rule-Detail.png)
+![Q-Rule Deep Dive](screenshots/Q_Rule_Detail.png)
 
 ## How It Works
-Q-Rule flags transactions where risk score is high and channel is online. Helps investigators prioritize cases.
+Q-Rule flags transactions where risk score is high and channel is online. Helps investigators prioritize cases with highest financial exposure.
 
 ## Project Link
-https://github.com/glorisprema/Fraud-Detection-Dashboard-Power-BI
+https://github.com/gloryprema/Fraud-Detection-Dashboard-Power-BI
