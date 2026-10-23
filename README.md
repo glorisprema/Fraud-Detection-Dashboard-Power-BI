@@ -75,4 +75,4 @@ Python, SQL (sqlite3, CASE, GROUP BY, JULIANDAY, JOIN), Power BI, DAX, Fraud Ana
 
 ### Contact
 
-Gloris Prema | Hamilton, ON | Open to Data Analyst roles | LinkedIn: [Add your LinkedIn link here]
+Gloris Prema | Hamilton, ON | Open to Data Analyst roles | LinkedIn: https://www.linkedin.com/in/gloris-paulraj-9302009b/
