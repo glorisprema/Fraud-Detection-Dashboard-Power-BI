@@ -1,65 +1,78 @@
-# Fraud Detection Dashboard - Power BI | GTA Branches
+# Fraud Detection Dashboard - Power BI | Python + SQL + Power BI | 100K Banking Transactions
 
-## Overview
-Power BI dashboard built to monitor high-risk fraud transactions across GTA branches - Hamilton Downtown, Toronto Main, and Oakville. Flags high-risk online transactions for investigation.
+**Author: Gloris Prema | Hamilton, ON | Synthetic Banking Data**
+**Repo:** `Fraud-Detection-Dashboard-Power-BI`
+**Stack:** Python (Pandas) | SQL (sqlite3, CASE, GROUP BY, JULIANDAY) | Power BI (DAX)
 
-This dashboard helps fraud teams prioritize investigations and reduce exposure.
+### Executive Dashboard
 
-## KPIs - Executive Summary
-- **26K Fraud Count** - Total confirmed fraud cases across all branches
-- **$15M Total Fraud Amount** - Total potential savings
-- **$2M Online Withdrawal Amount** - High-risk channel exposure
-- **$3.72M Q-Rule Impact** - Online AND Amount > $2,500 (665 cases)
+![Executive Dashboard](Fraud%20Detection%20Dashboard.png)
 
-## Key Insights
-- **Total Fraud Amount $15M** across GTA branches (26K cases)
-- **Hamilton Downtown has highest fraud by branch** - requires priority monitoring
-- **Online channel is highest risk** - $2M exposure in withdrawals
-- **Q-Rule: Online AND Amount > $2,500 Flag High-Risk** - $3.72M exposure, 665 high-risk transactions for immediate investigation
-- **🚩 Flagged Transactions = 665** - High-Risk Detail table for investigation
+**KPIs from Dashboard:**
+- **26K Fraud Count**
+- **$15M Total Fraud Amount**
+- **$2M Online Withdrawal Fraud**
+- **$4.72M Risk Impact**
+- **Top Branch: Hamilton Downtown | Top Channel: Online**
 
-## Visuals
-- **Page 1 - Executive Summary:**
-    - KPI Cards: 26K Fraud Count, $15M Total Fraud Amount, $2M Online Withdrawal, $3.72M Q-Rule Impact
-    - Total Fraud Amount by Branch: Hamilton Downtown > Toronto Main > Oakville
-    - Fraud Count by Channel: Donut chart - Online, Branch, ATM
+### High-Risk Deep Dive - $3.72M Proof
 
-- **Page 2 - Q-Rule Deep Dive:**
-    - Sum of Amount: 3.72M
-    - Channel: Online
-    - Flagged Transactions: 665
-    - High Risk Detail Table: Customer ID, Branch, Sum of Amount (orange highlight)
+![High Risk Detail](High%20Risk%20online.png)
 
-## Tools & DAX Used
-- **Power BI Desktop**
-- **DAX Measures:**
-    - `Total_Fraud_Amount = SUM(Fraud_Amount)`
-    - `Fraud_Count = COUNT(Fraud_Flag)`
-    - `Q_Rule_Flag = IF(AND(Channel="Online", Amount>2500), 1, 0)`
-    - `Q_Rule_Amount = CALCULATE(SUM(Amount), Channel="Online", Amount>2500)`
-    - `Flagged_Txn_Count = COUNT(Customer_ID)`
-- **Data Source:** Fraud transactions dataset (GTA Branches)
+- **665 High-Risk Transactions WHERE Amount > $2,500**
+- **$3.72M Sum of Amount at Risk**
+- **Channel: Online | Customer Detail: CUST1271, CUST1956 etc**
 
-## Files
-- `Fraud_Dashboard.pbix` - Main Power BI file
-- `Fraud Detection Dashboard.png` - Executive Summary screenshot
-- `High Risk online.png` - Q-Rule Deep Dive screenshot
+**Funnel - No Double Counting:**
+### Phase 1: Python + SQL - Banking_project_cleaned.ipynb
 
-## Business Impact
-This dashboard helps fraud teams prioritize investigations by focusing on Hamilton Downtown branch and Online channel. Flags $3.72M in high-risk online transactions (> $2,500) across 665 cases, potentially saving $3M+ in fraud losses.
+**File:** `Banking_project_cleaned.ipynb`
+**Output Files:** `q_velocity.csv (20,6)` and `risk_view.csv (99002,18)`
 
-## Author
-**Gloris Prema - Aspiring Data Analyst | Hamilton, ON**
-- Focus: Fraud Analytics, Power BI, GTA Banking
+**1. Python Cleaning:**
+- Imported 100K → Cleaned to 99,002 rows
+- Created DB: `sqlite3.connect('banking_project_cleaned.db')` → `df.to_sql('banking_transaction')`
 
-## Dashboard - Executive Summary
-![Executive Summary](Fraud%20Detection%20Dashboard.png)
+**2. SQL Analysis with pd.read_sql (All 10 Queries):**
 
-## Dashboard - Q-Rule Deep Dive
-![Q-Rule Deep Dive](High%20Risk%20online.png)
+- `SELECT COUNT(*) FROM banking_transaction` → 99,002
+- `SELECT Branch, COUNT(*) GROUP BY Branch` → Hamilton Downtown, Toronto Main, Oakville
+- `SELECT Channel, COUNT(*) FROM banking_transaction WHERE Is_Fraud=1 GROUP BY Channel` → Online highest fraud
+- `SELECT Transaction_type, SUM(Amount), COUNT(*) GROUP BY Transaction_type`
+- `SELECT Transaction_type, COUNT(*) as Fraud_count, SUM(Amount) WHERE Is_Fraud=1 GROUP BY Transaction_type`
+- `SELECT Channel, Transaction_type, COUNT(*) as Fraud_count, SUM(Amount) WHERE Is_Fraud=1 GROUP BY Channel, Transaction_type ORDER BY Fraud_count DESC` → Online Withdrawal 1222 flagged
+- **Q-Velocity (20,6):** Self-join with `JULIANDAY()`
+  `SELECT Customer_ID, CAST((JULIANDAY(Deposit_Time)-JULIANDAY(Withdrawal_Time))*1440 AS INT) as Days_Diff FROM banking_transaction d JOIN banking_transaction w ON d.Customer_ID=w.Customer_ID WHERE w.Transaction_type='Withdrawal' AND d.Transaction_type='Deposit' AND Deposit_Time > Withdrawal_Time` → Saved as `q_velocity.csv` → Shape (20,6)
+- **Q-Rule:** `WHERE Is_Fraud=1 AND Channel='Online' AND Amount>500` → `SELECT Channel, Transaction_type, COUNT(*) as Flagged_Txn, SUM(Amount) as Blocked_Amount, AVG(Amount) GROUP BY Channel, Transaction_type`
+- **Risk Measure:** `SELECT CASE WHEN Amount<500 THEN 'small' WHEN Amount BETWEEN 500 AND 5000 THEN 'medium' ELSE 'Large(>5k)-flag' END as risk_bucket, COUNT(*), SUM(CASE WHEN Is_Fraud=1 THEN Amount ELSE 0 END) GROUP BY risk_bucket` → **small 62,970 / medium 35,978 / Large 54**
+- **Risk Flags Final View (99002,18):** `SELECT *, CASE WHEN Channel='Online' AND Is_Fraud=1 THEN 1 ELSE 0 END as is_online, CASE WHEN Channel='Online' AND Transaction_type='Withdrawal' AND Is_Fraud=1 THEN 1 ELSE 0 END as is_online_withdrawal_fraud, CASE WHEN Amount<500 THEN 'small' WHEN Amount BETWEEN 500 AND 5000 THEN 'Medium' ELSE 'Large' END as risk_bucket FROM banking_transaction` → `is_online_withdrawal_fraud SUM = 3,437` → Saved as `risk_view.csv` → Shape (99,002, 18)
 
-## How It Works
-Q-Rule flags transactions where Channel = Online AND Amount > $2,500. This helps investigators prioritize cases with highest financial exposure for Hamilton and Toronto branches.
+### Phase 2: Power BI - Fraud_Dashboard.pbix
 
-## Project Link
-https://github.com/glorisprema/Fraud-Detection-Dashboard-Power-BI
+**File:** `Fraud_Dashboard.pbix`
+- Import Mode, 16 tables from banking_project_cleaned.db
+- **DAX:** `HighRiskAmount = CALCULATE(SUM(Amount), is_online_withdrawal_fraud=1, Amount>2500)` → Result 665 / $3.72M
+- Visuals: Fraud by Branch, Fraud Count by Channel, Customer Detail Table
+
+### Project Structure - Files in this Repo
+
+- `Banking_project_cleaned.ipynb` - Python + SQL cleaning + 10 SQL queries
+- `q_velocity.csv` - Q-Velocity result (20 rows, 6 cols) - Proof of JULIANDAY self-join
+- `risk_view.csv` - Final flags (99,002 rows, 18 cols) - Proof of 3,437 flags and 62,970/35,978/54 buckets
+- `Fraud_Dashboard.pbix` - Power BI Dashboard File
+- `Fraud Detection Dashboard.png` - Executive Screenshot ($15M, 26K, $2M, $4.72M)
+- `High Risk online.png` - High Risk Detail Screenshot (665, $3.72M)
+
+### Tools
+
+Python, SQL (sqlite3, CASE, GROUP BY, JULIANDAY, JOIN), Power BI, DAX, Fraud Analytics, Risk Scoring
+
+### How to Replicate
+
+1. Run `Banking_project_cleaned.ipynb` → Get 99,002 cleaned, 3,437 flags, 20 velocity
+2. Verify: `SELECT SUM(Amount) FROM banking_transaction WHERE is_online_withdrawal_fraud=1 AND Amount>2500` → $3.72M, `COUNT` → 665
+3. Load DB into Power BI → Recreate DAX → Build dashboard
+
+### Contact
+
+Gloris Prema | Hamilton, ON | Open to Data Analyst roles | LinkedIn: [Add your LinkedIn link here]
