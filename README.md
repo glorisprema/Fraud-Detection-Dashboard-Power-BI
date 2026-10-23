@@ -42,10 +42,10 @@ This dashboard helps fraud teams prioritize investigations and reduce exposure.
 - **Data Source:** Fraud transactions dataset (GTA Branches)
 
 ## Files
-- `Fraud_Detection_Dashboard.pbix` - Main Power BI file
+- `Fraud_Dashboard.pbix` - Main Power BI file
 - `/screenshots/` - Dashboard screenshots
-    - `Executive_Summary.png`
-    - `Q_Rule_Detail.png`
+    - `Fraud Detection Dashboard.png`
+    - `High Risk online.png`
 
 ## Business Impact
 This dashboard helps fraud teams prioritize investigations by focusing on Hamilton Downtown branch and Online channel. Flags $3.72M in high-risk online transactions (> $2,500) across 665 cases, potentially saving $3M+ in fraud losses.
@@ -56,10 +56,10 @@ This dashboard helps fraud teams prioritize investigations by focusing on Hamilt
 - LinkedIn: (Add your LinkedIn link here)
 
 ## Dashboard - Executive Summary
-![Executive Summary](screenshots/Executive_Summary.png)
+![Executive Summary](screenshots/Fraud Detection Dashboard.png)
 
 ## Dashboard - Q-Rule Deep Dive
-![Q-Rule Deep Dive](screenshots/Q_Rule_Detail.png)
+![Q-Rule Deep Dive](screenshots/High Risk online.png)
 
 ## How It Works
 Q-Rule flags transactions where risk score is high and channel is online. Helps investigators prioritize cases with highest financial exposure.
