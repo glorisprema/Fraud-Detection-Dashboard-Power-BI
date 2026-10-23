@@ -9,26 +9,26 @@ This dashboard helps fraud teams prioritize investigations and reduce exposure.
 - **26K Fraud Count** - Total confirmed fraud cases across all branches
 - **$15M Total Fraud Amount** - Total potential savings
 - **$2M Online Withdrawal Amount** - High-risk channel exposure
-- **$3.72M Q-Rule Impact** - Online AND Amount > $2,500 Flag (665 cases)
+- **$3.72M Q-Rule Impact** - Online AND Amount > $2,500 (665 cases)
 
 ## Key Insights
 - **Total Fraud Amount $15M** across GTA branches (26K cases)
 - **Hamilton Downtown has highest fraud by branch** - requires priority monitoring
 - **Online channel is highest risk** - $2M exposure in withdrawals
-- **Q-Rule: Online AND Amount > $2,500** - Flags $3.72M exposure, 665 high-risk transactions for immediate investigation
-- **Flagged Transactions = 665** - This is your version of the sample 3,684 (based on your dataset size)
+- **Q-Rule: Online AND Amount > $2,500 Flag High-Risk** - $3.72M exposure, 665 high-risk transactions for immediate investigation
+- **🚩 Flagged Transactions = 665** - High-Risk Detail table for investigation
 
 ## Visuals
 - **Page 1 - Executive Summary:**
     - KPI Cards: 26K Fraud Count, $15M Total Fraud Amount, $2M Online Withdrawal, $3.72M Q-Rule Impact
-    - Total Fraud Amount by Branch: Bar chart showing Hamilton Downtown > Toronto Main > Oakville
-    - Fraud Count by Channel: Donut chart - Online, Branch, ATM distribution
+    - Total Fraud Amount by Branch: Hamilton Downtown > Toronto Main > Oakville
+    - Fraud Count by Channel: Donut chart - Online, Branch, ATM
 
 - **Page 2 - Q-Rule Deep Dive:**
     - Sum of Amount: 3.72M
     - Channel: Online
-    - 🚩 Flagged Transactions: 665
-    - High Risk Detail Table: Customer ID, Branch, Sum of Amount (highlighted orange)
+    - Flagged Transactions: 665
+    - High Risk Detail Table: Customer ID, Branch, Sum of Amount (orange highlight)
 
 ## Tools & DAX Used
 - **Power BI Desktop**
@@ -38,31 +38,28 @@ This dashboard helps fraud teams prioritize investigations and reduce exposure.
     - `Q_Rule_Flag = IF(AND(Channel="Online", Amount>2500), 1, 0)`
     - `Q_Rule_Amount = CALCULATE(SUM(Amount), Channel="Online", Amount>2500)`
     - `Flagged_Txn_Count = COUNT(Customer_ID)`
-- **Data Cleaning:** Python (Pandas) / Power Query
 - **Data Source:** Fraud transactions dataset (GTA Branches)
 
 ## Files
 - `Fraud_Dashboard.pbix` - Main Power BI file
-- `/screenshots/` - Dashboard screenshots
-    - `Fraud Detection Dashboard.png`
-    - `High Risk online.png`
+- `Fraud Detection Dashboard.png` - Executive Summary screenshot
+- `High Risk online.png` - Q-Rule Deep Dive screenshot
 
 ## Business Impact
 This dashboard helps fraud teams prioritize investigations by focusing on Hamilton Downtown branch and Online channel. Flags $3.72M in high-risk online transactions (> $2,500) across 665 cases, potentially saving $3M+ in fraud losses.
 
 ## Author
-**Glory Prema - Aspiring Data Analyst | Hamilton, ON**
+**Gloris Prema - Aspiring Data Analyst | Hamilton, ON**
 - Focus: Fraud Analytics, Power BI, GTA Banking
-- LinkedIn: (Add your LinkedIn link here)
 
 ## Dashboard - Executive Summary
-![Executive Summary](screenshots/Fraud Detection Dashboard.png)
+![Executive Summary](Fraud%20Detection%20Dashboard.png)
 
 ## Dashboard - Q-Rule Deep Dive
-![Q-Rule Deep Dive](screenshots/High Risk online.png)
+![Q-Rule Deep Dive](High%20Risk%20online.png)
 
 ## How It Works
-Q-Rule flags transactions where risk score is high and channel is online. Helps investigators prioritize cases with highest financial exposure.
+Q-Rule flags transactions where Channel = Online AND Amount > $2,500. This helps investigators prioritize cases with highest financial exposure for Hamilton and Toronto branches.
 
 ## Project Link
-https://github.com/gloryprema/Fraud-Detection-Dashboard-Power-BI
+https://github.com/glorisprema/Fraud-Detection-Dashboard-Power-BI
